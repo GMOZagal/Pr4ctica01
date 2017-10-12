@@ -1,1 +1,168 @@
-#include  <stdio.h>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Infragistics.Win.UltraWinGrid;
+
+
+namespace Burbuja {
+	/// <summary>
+	/// FrmMain
+	/// </summary>
+	public partial class FrmMain : Form {
+
+		#region Private fields
+
+		DataTable _tblnumbers = new DataTable();
+		DataTable _tblsorted = new DataTable();
+
+		int i = 0;
+
+		int[] variable = new int[10];
+		int[] ordenado = new int[10];
+
+		#endregion
+
+		#region Constructor
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public FrmMain() {
+			InitializeComponent();
+		}
+
+		#endregion
+
+		private void FrmMain_Shown(object sender, EventArgs e) {
+
+
+			this.CreateTable();
+			this.CreateTable1();
+
+			this.txtNumber.Focus();
+
+		}
+
+		#region Event forms handler
+
+		#endregion
+
+
+		#region Misc methods
+
+		private void CreateTable() {
+
+			_tblnumbers.Columns.Add("NUMBER", typeof(int));
+
+		}
+
+		private void CreateTable1() {
+
+			_tblsorted.Columns.Add("SORTED", typeof(int));
+
+		}
+
+
+		private void txtNumber_KeyPress(object sender, KeyPressEventArgs e) {
+
+			DataRow newRow = this._tblnumbers.NewRow();
+
+			if (e.KeyChar == 13) {
+
+				newRow["NUMBER"] = this.txtNumber.Text;
+
+				this._tblnumbers.Rows.Add(newRow);
+
+				this.gridData.DataSource = this._tblnumbers;
+
+
+				if (i == 10) {
+
+					MessageBox.Show("Vector llenado", "Aviso",
+						MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+				} else {
+
+					variable[i] = Convert.ToInt16(this.txtNumber.Text);
+
+				}
+
+
+				i++;
+
+				this.txtNumber.Text = string.Empty;
+
+
+			}
+		}
+
+
+
+		private void btnRun_Click(object sender, EventArgs e) {
+
+			if (this.rbtAsc.Checked) {//Ascendente
+
+				for (int j = 0; j <= 9; j++) {
+
+					for (int k = j + 1; k <= 9; k++) {
+
+						if (variable[j] < variable[k]) {
+
+
+						} else {
+							int aux = variable[j];
+							variable[j] = variable[k];
+							variable[k] = aux;
+						}
+					}
+
+				}
+			} else {//Descendente
+
+				for (int j = 0; j <= 9; j++) {
+
+					for (int k = j + 1; k <= 9; k++) {
+
+						if (variable[j] > variable[k]) {
+
+
+						} else {
+							int aux = variable[j];
+							variable[j] = variable[k];
+							variable[k] = aux;
+						}
+					}
+
+				}
+
+
+			}
+
+
+
+			for (int z = 0; z <= 9; z++) {
+
+				DataRow newRow1 = this._tblsorted.NewRow();
+
+				newRow1["SORTED"] = variable[z];
+
+				this._tblsorted.Rows.Add(newRow1);
+
+
+			}
+
+			this.gridSorted.DataSource = this._tblsorted;
+
+		}
+
+
+		#endregion
+
+
+	}
+}
